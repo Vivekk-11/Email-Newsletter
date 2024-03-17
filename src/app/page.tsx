@@ -1,7 +1,12 @@
+import Home from "@/modules/home/home";
 import React from "react";
 
 const Page = () => {
-  return <div>Page</div>;
+  return (
+    <div>
+      <Home />
+    </div>
+  );
 };
 
 export default Page;
