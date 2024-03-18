@@ -2,11 +2,7 @@ import Dashboard from "@/modules/dashboard/Dashboard";
 import React from "react";
 
 const DashboardPage = () => {
-  return (
-    <div>
-      <Dashboard />
-    </div>
-  );
+  return <Dashboard />;
 };
 
 export default DashboardPage;

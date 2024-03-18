@@ -24,7 +24,7 @@ const Toolbar = () => {
           />
         </Link>
       ) : (
-        <Link href={"/sign-"}>Login</Link>
+        <Link href={"/sign-in"}>Login</Link>
       )}
     </>
   );

@@ -2,6 +2,7 @@
 import { NextUIProvider } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import DashboardSidebar from "../widgets/dashboard/DashboardSidebar";
+import { Toaster } from "react-hot-toast";
 
 interface ProviderProps {
   children: React.ReactNode;
@@ -26,6 +27,7 @@ export default function Providers({ children }: ProviderProps) {
       ) : (
         <>{children}</>
       )}
+      <Toaster reverseOrder={false} position="top-center" />
     </NextUIProvider>
   );
 }
