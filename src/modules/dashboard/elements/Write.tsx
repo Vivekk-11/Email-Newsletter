@@ -1,14 +1,21 @@
 "use client";
+import { getEmails } from "@/actions/get.emails";
 import { ICONS } from "@/shared/utils/icons";
+import { useClerk } from "@clerk/nextjs";
 import { Button } from "@nextui-org/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 const Write = () => {
+  const [emails, setEmails] = useState<
+    { title: string; content: string; newsletterOwnerId: string; _id: string }[]
+  >([]);
   const [emailTitle, setEmailTitle] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
-  const router = useRouter()
+  const router = useRouter();
+  const { user } = useClerk();
 
   const handleCreate = () => {
     if (emailTitle.trim().length === 0) {
@@ -19,6 +26,21 @@ const Write = () => {
     }
   };
 
+  const deleteHandler = async (id: string) => {};
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const emails = await getEmails(user?.id);
+        if (Array.isArray(emails)) {
+          setEmails(emails);
+        }
+      } catch (error) {
+        console.log(`Error while fetching the emails:- ${error}`);
+      }
+    })();
+  }, [user?.id]);
+
   return (
     <div className="w-full flex p-5 flex-wrap relative gap-6">
       <div
@@ -28,6 +50,41 @@ const Write = () => {
         <span className="text-2xl block text-center mb-3">{ICONS.plus}</span>
         <p className="text-2xl">Create New</p>
       </div>
+
+      {/* saved emails */}
+
+      {emails &&
+        emails.map(
+          (i: {
+            title: string;
+            content: string;
+            _id: string;
+            newsletterOwnerId: string;
+          }) => {
+            const formattedTitle = i?.title
+              ?.replace(/\s+/g, "-")
+              .replace(/&/g, "-");
+            return (
+              <div
+                key={i?._id}
+                className="w-[200px] h-[200px] z-[0] relative bg-slate-300 flex flex-col items-center justify-center rounded border cursor-pointer"
+              >
+                <span
+                  className="absolute block z-20 right-2 top-2 text-2xl cursor-pointer"
+                  onClick={() => deleteHandler(i?._id)}
+                >
+                  {ICONS.delete}
+                </span>
+                <Link
+                  href={`/dashboard/new-email?subject=${formattedTitle}`}
+                  className="text-xl"
+                >
+                  {i.title}
+                </Link>
+              </div>
+            );
+          }
+        )}
 
       {open && (
         <div className="absolute flex items-center justify-center top-0 left-0 bg-[#00000028] h-screen w-full">
