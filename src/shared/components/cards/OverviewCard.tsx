@@ -5,9 +5,9 @@ import { ICONS } from "@/shared/utils/icons";
 const OverviewCard = () => {
   const { subscribersData, loading } = useSubscribersAnalytics();
   const lastMonthSubscribers =
-    subscribersData[subscribersData.length - 1].count;
+    subscribersData[subscribersData.length - 1]?.count;
   const previousLastMonthSubscribers =
-    subscribersData[subscribersData.length - 1].count;
+    subscribersData[subscribersData.length - 1]?.count;
 
   let comparePercentage = 0;
 
