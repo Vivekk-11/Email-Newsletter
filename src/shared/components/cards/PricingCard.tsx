@@ -1,9 +1,30 @@
+"use client";
+import { stripeSubscribe } from "@/actions/stripe.subscribe";
 import { GrowPlan, freePlan, scalePlan } from "@/app/configs/constants";
 import { ICONS } from "@/shared/utils/icons";
+import { useUser } from "@clerk/nextjs";
 import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const PricingCard = ({ active }: { active: string }) => {
+  const { user } = useUser();
+  const router = useRouter();
+  const handleSubscription = async ({
+    price,
+    plan,
+  }: {
+    price: string;
+    plan: string;
+  }) => {
+    if (user?.id) {
+      const response = await stripeSubscribe({ userId: user?.id, price, plan });
+      if (response?.url && response.status === "success") {
+        router.push(response.url);
+      }
+    }
+  };
+
   return (
     <div className="w-full md:flex items-start justify-around py-8">
       {/* free plan */}
@@ -72,7 +93,7 @@ const PricingCard = ({ active }: { active: string }) => {
         <br />
         <div className="border-b pb-8 border-black">
           <h5 className="font-clashDisplay uppercase text-cyber-ink text-3xl">
-            ${active === "Monthly" ? "42" : "49"}/month
+            ${active === "Monthly" ? "49" : "42"}/month
           </h5>
           <p className="text-lg">Billed {active}</p>
         </div>
@@ -86,12 +107,22 @@ const PricingCard = ({ active }: { active: string }) => {
           </div>
         ))}
         <br />
-        <Button color="primary" className="w-full text-xl !py-6">
+        <Button
+          onClick={handleSubscription.bind(null, {
+            price:
+              active === "Monthly"
+                ? "price_1OwMDmSEqasUSQMCy2g7W9E6"
+                : "price_1OwM8iSEqasUSQMCdsp0q1Na",
+            plan: "GROW",
+          })}
+          color="primary"
+          className="w-full text-xl !py-6"
+        >
           Get Started
         </Button>
         <p className="pt-1 opacity-[.7] text-center">
           30 day free trial of Scale features, then $
-          {active === "Monthly" ? "42" : "49"}/mo.
+          {active === "Monthly" ? "49" : "42"}/mo.
         </p>
       </div>
 
@@ -131,7 +162,17 @@ const PricingCard = ({ active }: { active: string }) => {
           </div>
         ))}
         <br />
-        <Button color="primary" className="w-full text-xl !py-6">
+        <Button
+          onClick={handleSubscription.bind(null, {
+            price:
+              active === "Monthly"
+                ? "price_1OwMG3SEqasUSQMCpXnuE90y"
+                : "price_1OwMHYSEqasUSQMCZAj2n8Zg",
+            plan: "SCALE",
+          })}
+          color="primary"
+          className="w-full text-xl !py-6"
+        >
           Get Started
         </Button>
         <p className="pt-1 opacity-[.7] text-center">
