@@ -1,4 +1,5 @@
 "use client";
+import { deleteEmail } from "@/actions/delete.email";
 import { getEmails } from "@/actions/get.emails";
 import { ICONS } from "@/shared/utils/icons";
 import { useClerk } from "@clerk/nextjs";
@@ -26,7 +27,25 @@ const Write = () => {
     }
   };
 
-  const deleteHandler = async (id: string) => {};
+  const deleteHandler = async (id: string) => {
+    await deleteEmail({ emailId: id })
+      .then((res) => {
+        if (res?.message) {
+          toast.success(res.message);
+          (async () => {
+            try {
+              const emails = await getEmails(user?.id);
+              if (Array.isArray(emails)) {
+                setEmails(emails);
+              }
+            } catch (error) {
+              console.log(`Error while fetching the emails:- ${error}`);
+            }
+          })();
+        }
+      })
+      .catch((err) => console.log(`Error while deleting the email:- ${err}`));
+  };
 
   useEffect(() => {
     (async () => {

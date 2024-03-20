@@ -13,6 +13,7 @@ import { NextResponse } from "next/server";
 import { Button } from "@nextui-org/react";
 import { saveEmail } from "@/actions/save.email";
 import { getEmailDetails } from "@/actions/get.email.details";
+import { sendEmail } from "@/shared/utils/email.sender";
 
 const EmailEditor = ({ subjectTitle }: { subjectTitle: string }) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -27,6 +28,18 @@ const EmailEditor = ({ subjectTitle }: { subjectTitle: string }) => {
     unlayer?.exportHtml(async (data) => {
       const { design, html } = data;
       setJsonData(design);
+      sendEmail({
+        userEmail: ["fearlesswarrior1771@gmail.com"],
+        content: html,
+        subject: subjectTitle,
+      })
+        .then(() => {
+          toast.success("Sent email successfully!");
+          history.push("/dashboard/write");
+        })
+        .catch((error) =>
+          console.log(`Error while sending the email:- ${error}`)
+        );
     });
   };
 
