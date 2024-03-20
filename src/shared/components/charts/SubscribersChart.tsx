@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import useSubscribersAnalytics from "@/shared/hooks/useSubscribersAnalytics";
 import {
   LineChart,
   Line,
@@ -11,46 +11,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface subscribersAnalyticsData {
-  month: string;
-  count: string;
-}
-
 const SubscribersChart = () => {
-  const [subscribersData, setSubscribersData] = useState<
-    { month: string; count: number }[]
-  >([]);
-
-  const data = [
-    {
-      month: "Jan 2024",
-      count: 2400,
-    },
-    {
-      month: "Feb 2024",
-      count: 1398,
-    },
-    {
-      month: "March 2024",
-      count: 9800,
-    },
-    {
-      month: "April 2024",
-      count: 3908,
-    },
-    {
-      month: "May 2024",
-      count: 4800,
-    },
-    {
-      month: "Jun 2024",
-      count: 3800,
-    },
-    {
-      month: "July 2024",
-      count: 4300,
-    },
-  ];
+  const { subscribersData, loading } = useSubscribersAnalytics();
 
   return (
     <div className="my-5 p-5 border rounded bg-white w-full md:h-[55vh] xl:h-[60vh]">
@@ -65,31 +27,37 @@ const SubscribersChart = () => {
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={"85%"} className={"mt-5"}>
-        <LineChart
-          width={500}
-          height={200}
-          data={data}
-          syncId="anyId"
-          margin={{
-            top: 10,
-            right: 30,
-            left: 0,
-            bottom: 0,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
-          <YAxis />
-          <Tooltip />
-          <Line
-            type="monotone"
-            dataKey="count"
-            stroke="#EB4898"
-            fill="#EB4898"
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      {loading ? (
+        <div className="h-[85%] flex items-center justify-center w-full">
+          <h5>Loading...</h5>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={"85%"} className={"mt-5"}>
+          <LineChart
+            width={500}
+            height={200}
+            data={subscribersData}
+            syncId="anyId"
+            margin={{
+              top: 10,
+              right: 30,
+              left: 0,
+              bottom: 0,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip />
+            <Line
+              type="monotone"
+              dataKey="count"
+              stroke="#EB4898"
+              fill="#EB4898"
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 };
