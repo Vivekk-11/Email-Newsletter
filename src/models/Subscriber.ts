@@ -6,9 +6,13 @@ const subscriberSchema = new Schema(
   {
     email: String,
     newsletterOwnerId: String,
+    source: { type: String, default: "By our website." },
+    status: { type: String, default: "Subscribed" },
   },
   { timestamps: true }
 );
 
-export default mongoose.models.Subscriber ||
-  mongoose.model("Subscriber", subscriberSchema);
+const Subscriber =
+  mongoose.models.Subscriber || mongoose.model("Subscriber", subscriberSchema);
+
+export default Subscriber;
