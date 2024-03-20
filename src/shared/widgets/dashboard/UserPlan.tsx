@@ -1,8 +1,10 @@
+"use client";
+import useSubscribers from "@/shared/hooks/useSubscribers";
 import { ICONS } from "@/shared/utils/icons";
 import { Slider } from "@nextui-org/slider";
-import { useRouter } from "next/navigation";
 
 const UserPlan = () => {
+  const { loading, subscribers } = useSubscribers();
   return (
     <div className="w-full my-3 p-3 bg-[#FDF1F8] rounded hover:shadow-xl cursor-pointer">
       <div className="w-full flex items-center">
@@ -16,10 +18,12 @@ const UserPlan = () => {
       <Slider
         aria-label="Player progress"
         hideThumb={true}
-        defaultValue={1}
+        defaultValue={subscribers?.length}
         className="max-w-md"
       />
-      <h6 className="text-[#831743]">0 of 2500 added</h6>
+      <h6 className="text-[#831743]">
+        {loading ? "..." : subscribers?.length} of 2500 added
+      </h6>
     </div>
   );
 };
