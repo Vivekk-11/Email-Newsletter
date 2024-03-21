@@ -16,7 +16,9 @@ export const addSubscriber = async ({
     await connectDb();
 
     const allUsers = await clerkClient.users.getUserList();
-    const newsletterOwner = allUsers.find((user) => user.username === username);
+    const newsletterOwner: any = allUsers.find(
+      (user) => user.username === username
+    );
 
     if (!newsletterOwner) {
       return { error: "Username is not valid." };
